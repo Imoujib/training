@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- action -->
+        <record id="action_list_courses" model="ir.actions.act_window">
+            <field name = "name">Action Courses</field>
+            <field name = "type">ir.actions.act_window</field>
+            <field name = "res_model">openacademy.course</field>
+            <field name = "view_model">form,tree</field>
+        </record>
+        <!-- menu -->
+        <!-- This Menu Item will appear in the Upper bar, That's why It needs NO parent or action -->
+        <menuitem id="menu_root" name="Open Academy" sequence="1"/>
+        <menuitem id = "open_menu" parent = "menu_root" name = "Open Academy" sequence = "2"/>
+        <menuitem id = "courses" parent = "open_menu" name = "Courses" sequence = "3"
+                  action = "action_list_courses"/>
+        <!-- form-->
+        <record id="course_form" model="ir.ui.view">
+            <field name="name">course.form</field>
+            <field name="model">openacademy.course</field>
+            <field name="arch" type="xml">
+                <form string="New course">
+                    <sheet>
+                        <group>
+                            <field name="titre"/>
+                            <notebook>
+                                <page string="Plus d'informations">
+                                    <group>
+                                        <field name="description"/>
+                                    </group>
+                                </page>
+                            </notebook>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <!-- Tree = list -->
+        <record id="course_tree" model="ir.ui.view">
+            <field name="name">course.tree</field>
+            <field name="model">openacademy.course</field>
+            <field name="arch" type="xml">
+                <tree string="courses_list">
+                    <field name="titre"/>
+                    <field name="description"/>
+                </tree>
+            </field>
+        </record>
+        <!-- Search -->
+        <record id="course_search" model="ir.ui.view">
+            <field name="name">course.search</field>
+            <field name="model">openacademy.course</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name = "titre"/>
+                    <field name = "description"/>
+                </search>
+            </field>
+        </record>
+    </data>
+</openerp>

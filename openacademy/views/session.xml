@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- action -->
+        <record id="action_list_sessions" model="ir.actions.act_window">
+            <field name = "name">session.action</field>
+            <field name = "type">ir.actions.act_window</field>
+            <field name = "res_model">openacademy.session</field>
+            <field name = "view_model">form,tree</field>
+        </record>
+        <!-- menu -->
+        <menuitem id = "sessions" parent = "open_menu" name = "Sessions" sequence = "3"
+                  action = "action_list_sessions"/>
+        <!-- form-->
+        <record id="session_form" model="ir.ui.view">
+            <field name="name">session.form</field>
+            <field name="model">openacademy.session</field>
+            <field name="arch" type="xml">
+                <form string="New session">
+                    <sheet>
+                        <group>
+                            <field name="nom"/>
+                            <field name="date_debut"/>
+                            <field name="duree"/>
+                            <field name="nb_place"/>
+                            <field name="course_id"/>
+                            <field name="partner_id"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <!-- Tree = list -->
+        <record id="session_tree" model="ir.ui.view">
+            <field name="name">session.tree</field>
+            <field name="model">openacademy.session</field>
+            <field name="arch" type="xml">
+                <tree string="sessions_list">
+                    <field name="nom"/>
+                    <field name="course_id"/>
+                    <field name="partner_id"/>
+                </tree>
+            </field>
+        </record>
+        <!-- Search -->
+        <record id="session_search" model="ir.ui.view">
+            <field name="name">session.search</field>
+            <field name="model">openacademy.session</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="nom"/>
+                    <field name="date_debut"/>
+                </search>
+            </field>
+        </record>
+    </data>
+</openerp>
