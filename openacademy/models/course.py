@@ -3,7 +3,7 @@ from openerp import models, fields
 
 class Course(models.Model):
     _name = "openacademy.course"
-
+    # les champs de la table course
     titre = fields.Char(Required = True, string="Titre")
     description = fields.Text(string="Description")
 
