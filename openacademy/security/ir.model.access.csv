@@ -1,2 +1,8 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_openacademy_openacademy,openacademy.openacademy,model_openacademy_openacademy,,1,0,0,0
+
+all_access_courses,all.access.course,openacademy.model_openacademy_course,openacademy.openacademy_manager,1,1,1,1
+all_access_sessions,all.access.sessions,openacademy.model_openacademy_session,openacademy.openacademy_manager,1,1,1,1
+
+
+readonly_access_courses,readonly.access.course,openacademy.model_openacademy_course,openacademy.openacademy_user,1,0,0,0
+readonly_access_sessions,readonly.access.sessions,openacademy.model_openacademy_session,openacademy.openacademy_user,1,0,0,0

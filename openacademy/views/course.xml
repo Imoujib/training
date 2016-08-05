@@ -1,19 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <!-- action -->
-        <record id="action_list_courses" model="ir.actions.act_window">
-            <field name = "name">Action Courses</field>
-            <field name = "type">ir.actions.act_window</field>
-            <field name = "res_model">openacademy.course</field>
-            <field name = "view_model">form,tree</field>
-        </record>
-        <!-- menu -->
-        <!-- This Menu Item will appear in the Upper bar, That's why It needs NO parent or action -->
-        <menuitem id="menu_root" name="Open Academy" sequence="1"/>
-        <menuitem id = "open_menu" parent = "menu_root" name = "Open Academy" sequence = "2"/>
-        <menuitem id = "courses" parent = "open_menu" name = "Courses" sequence = "3"
-                  action = "action_list_courses"/>
         <!-- form-->
         <record id="course_form" model="ir.ui.view">
             <field name="name">course.form</field>
@@ -23,14 +10,20 @@
                     <sheet>
                         <group>
                             <field name="titre"/>
-                            <notebook>
-                                <page string="Plus d'informations">
-                                    <group>
-                                        <field name="description"/>
-                                    </group>
-                                </page>
-                            </notebook>
+                            <field name="user_id"/>
                         </group>
+                        <notebook>
+                            <page string="Plus d'informations">
+                                <group>
+                                    <field name="description"/>
+                                </group>
+                            </page>
+                            <page string="Sessions prevues">
+                                <group>
+                                    <field name="session_ids"/>
+                                </group>
+                            </page>
+                        </notebook>
                     </sheet>
                 </form>
             </field>
@@ -46,16 +39,43 @@
                 </tree>
             </field>
         </record>
-        <!-- Search -->
+          <!-- Search view with filter -->
         <record id="course_search" model="ir.ui.view">
             <field name="name">course.search</field>
             <field name="model">openacademy.course</field>
             <field name="arch" type="xml">
                 <search>
-                    <field name = "titre"/>
-                    <field name = "description"/>
+
+                    <!--Recherche simple -->
+                    <field name="titre"/>
+                    <field name="description"/>
+
+                    <!--Filtres -->
+                    <filter name="my_courses" string="Mes cours" domain="[('user_id','=',uid)]"/>
+
+                     <!--Group by -->
+                    <group string="Grouper par">
+                        <filter name="responsible" string="Responsable" context="{'group_by':'user_id'}" />
+                    </group>
+
                 </search>
             </field>
         </record>
+        <!-- action -->
+        <record id="action_list_courses" model="ir.actions.act_window">
+            <field name = "name">Action Courses</field>
+            <field name = "type">ir.actions.act_window</field>
+            <field name = "res_model">openacademy.course</field>
+            <field name = "view_model">form,tree,search</field>
+            <field name="search_view_id" ref="course_search"/>
+            <field name="context" eval="{'search_default_my_courses':1}"/>
+        </record>
+        <!-- menu -->
+        <!-- This Menu Item will appear in the Upper bar, That's why It needs NO parent or action -->
+        <menuitem id="menu_root" name="Open Academy" sequence="1"/>
+        <menuitem id = "open_menu" parent = "menu_root" name = "Open Academy" sequence = "2"/>
+        <menuitem id = "courses" parent = "open_menu" name = "Courses" sequence = "3"
+                  action = "action_list_courses"/>
+
     </data>
 </openerp>

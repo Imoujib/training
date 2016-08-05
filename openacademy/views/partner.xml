@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+         <!-- action -->
+        <record id="action_list_instructeurs" model="ir.actions.act_window">
+            <field name = "name">instructeur.action</field>
+            <field name = "type">ir.actions.act_window</field>
+            <field name = "res_model">res.partner</field>
+            <field name = "view_model">form,tree</field>
+        </record>
+        <!-- menu -->
+        <menuitem id = "instructeurs" parent = "open_menu" name = "Instructeurs" sequence = "3"
+                  action = "action_list_instructeurs"/>
+
+        <!-- Inherit Form View to Modify it -->
+        <record id="partner_form" model="ir.ui.view">
+            <field name="name">partner.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='name']" position="after">
+                    <!-- Add your fields or attributes here -->
+                    <field name="instructor"/>
+                </xpath>
+
+            </field>
+        </record>
+    </data>
+</openerp>

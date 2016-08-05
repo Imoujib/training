@@ -1,30 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <!-- action -->
-        <record id="action_list_sessions" model="ir.actions.act_window">
-            <field name = "name">session.action</field>
-            <field name = "type">ir.actions.act_window</field>
-            <field name = "res_model">openacademy.session</field>
-            <field name = "view_model">form,tree</field>
-        </record>
-        <!-- menu -->
-        <menuitem id = "sessions" parent = "open_menu" name = "Sessions" sequence = "3"
-                  action = "action_list_sessions"/>
         <!-- form-->
         <record id="session_form" model="ir.ui.view">
             <field name="name">session.form</field>
             <field name="model">openacademy.session</field>
             <field name="arch" type="xml">
                 <form string="New session">
+                    <header>
+                        <!--button name="draft" type="workflow"
+                                string="Reset to draft"
+                                states="confirmed,done"/-->
+                        <button name="signal_confirm" type="workflow"
+                                string="Confirm" states="draft"
+                                class="oe_highlight"/>
+                        <button name="signal_done" type="workflow"
+                                string="Mark as done" states="confirmed"
+                                class="oe_highlight"/>
+                        <field name="state" widget="statusbar" />
+
+                    </header>
                     <sheet>
                         <group>
                             <field name="nom"/>
                             <field name="date_debut"/>
                             <field name="duree"/>
                             <field name="nb_place"/>
+                            <field name="percent_place" widget="progressbar"/>
                             <field name="course_id"/>
                             <field name="partner_id"/>
+                            <field name="participant_ids"/>
+                            <field name="active"/>
                         </group>
                     </sheet>
                 </form>
@@ -35,10 +41,13 @@
             <field name="name">session.tree</field>
             <field name="model">openacademy.session</field>
             <field name="arch" type="xml">
-                <tree string="sessions_list">
+                <tree string="sessions_list" colors="blue:duree&lt;'5'; red:duree&gt;'15'">
                     <field name="nom"/>
+                    <field name="duree" invisible="1"/>
                     <field name="course_id"/>
                     <field name="partner_id"/>
+                    <field name="percent_place" widget="progressbar"/>
+                    <field name="active" readonly="1"/>
                 </tree>
             </field>
         </record>
@@ -53,5 +62,95 @@
                 </search>
             </field>
         </record>
+
+        <!-- Calendar -->
+        <record id="session_calendar" model="ir.ui.view">
+            <field name="name">session.calendar</field>
+            <field name="model">openacademy.session</field>
+            <field name="arch" type="xml">
+                <calendar string="Sessions Calendar" date_start="date_debut" date_stop="date_fin" color="partner_id">
+                    <field name="nom"/>
+                </calendar>
+            </field>
+        </record>
+        <!-- Gantt view -->
+        <record model="ir.ui.view" id="session_gantt">
+            <field name="name">session.gantt</field>
+            <field name="model">openacademy.session</field>
+            <field name="arch" type="xml">
+                <gantt string="Session Gantt" color="course_id"
+                       date_start="date_debut" date_delay="heure"
+                       default_group_by='instructor_id'>
+                    <field name="nom"/>
+                </gantt>
+            </field>
+        </record>
+        <!-- Graph view -->
+        <record id="participant_per_session" model="ir.ui.view">
+            <field name="name">session.graph</field>
+            <field name="model">openacademy.session</field>
+            <field name="arch" type="xml">
+                <graph string="Total participants par session">
+                    <field name="course_id"/>
+                    <field name="nb_participant" type="measure"/>
+                </graph>
+            </field>
+        </record>
+        <!-- Kanban view -->
+        <record model="ir.ui.view" id="session_per course_kanban">
+            <field name="name">session.kanban</field>
+            <field name="model">openacademy.session</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="course_id">
+                    <field name="color"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div
+                                    t-attf-class="oe_kanban_color_{{kanban_getcolor(record.color.raw_value)}}
+                                                  oe_kanban_global_click_edit oe_semantic_html_override
+                                                  oe_kanban_card {{record.group_fancy==1 ? 'oe_kanban_card_fancy' : ''}}">
+                                <div class="oe_dropdown_kanban">
+                                    <!-- dropdown menu -->
+                                    <div class="oe_dropdown_toggle">
+                                        <i class="fa fa-bars fa-lg"/>
+                                        <ul class="oe_dropdown_menu">
+                                            <li>
+                                                <a type="delete">Delete</a>
+                                            </li>
+                                            <li>
+                                                <ul class="oe_kanban_colorpicker"
+                                                    data-field="color"/>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="oe_clear"></div>
+                                </div>
+                                <div t-attf-class="oe_kanban_content">
+                                    <!-- title -->
+                                    Session name:
+                                    <field name="nom"/>
+                                    <br/>
+                                    Start date:
+                                    <field name="date_debut"/>
+                                    <br/>
+                                    duration:
+                                    <field name="duree"/>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+        <!-- action -->
+        <record id="action_list_sessions" model="ir.actions.act_window">
+            <field name = "name">session.action</field>
+            <field name = "type">ir.actions.act_window</field>
+            <field name = "res_model">openacademy.session</field>
+            <field name = "view_model">form,tree,calendar,gantt,graph,kanban</field>
+        </record>
+        <!-- menu -->
+        <menuitem id = "sessions" parent = "open_menu" name = "Sessions" sequence = "3"
+                  action = "action_list_sessions"/>
     </data>
 </openerp>
